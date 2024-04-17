@@ -35,8 +35,8 @@ public class Main {
             player = new Hero(
                     string, 100, 20, 20, 30, 10
             );
-            System.out.println(String.format("Спасти наш мир от драконов вызвался %s! Ура-а-а! В бой!",
-                    player.getName()));
+            System.out.printf("Спасти наш мир от драконов вызвался %s! Ура-а-а! В бой!%n",
+                    player.getName());
 
             //Метод для вывода меню
             Navigation();
@@ -78,7 +78,6 @@ public class Main {
     private static void commitSell() throws IOException {
 
         if (player != null) {
-            Trader trader = new Trader("Торговец", 50, 10);
 
             // Логика торговли с постепенным уменьшением золота у героя и увеличением здоровья
             int price = 10; // Количество золота, которое требуется заплатить за товар
@@ -93,7 +92,6 @@ public class Main {
                 if (userResponse.equalsIgnoreCase("да")) {
                     command("1");
                 } else if (userResponse.equalsIgnoreCase("нет")) {
-
                 } else {
                     System.out.println("Некорректный ввод. Пожалуйста, введите 'да' или 'нет'.");
                 }
@@ -123,7 +121,7 @@ public class Main {
         }
     }
 
-    //после ввода имени, нам открывается меню, вот метод для меню:
+    // навигация
     private static void Navigation() {
         System.out.println("Куда вы хотите пойти?");
         System.out.println("1. К Торговцу");
@@ -131,16 +129,14 @@ public class Main {
         System.out.println("3. Выход");
     }
 
-    //То есть пользователю нужно ввести номер пункта,
-    // который мы также обрабатываем в методе command, а именно в операторе switch:
     private static void commitFight() {
 
         battleScene.fight(player, createMonster(), new FightCallback() {
 
             @Override
             public void fightWin() {
-                System.out.println(String.format("%s победил! Теперь у вас %d опыта и %d золота, а также осталось %d здоровья.",
-                        player.getName(), player.getExperience(), player.getGold(), player.getHealth()));
+                System.out.printf("%s победил! Теперь у вас %d опыта и %d золота, а также осталось %d здоровья.%n",
+                        player.getName(), player.getExperience(), player.getGold(), player.getHealth());
                 System.out.println("Желаете продолжить поход в темный лес или вернуться в город? (да/нет)");
                 try {
                     command(br.readLine());
@@ -167,7 +163,7 @@ public class Main {
         //С вероятностью 50% создается или скелет, или гоблин
         if (random % 2 == 0) return new Goblin(
                 "Гоблин", 50, 10, 10, 100, 20);
-        else return new Skeleton (
+        else return new Skeleton(
                 "Скелет", 25, 20, 20, 100, 10);
     }
 

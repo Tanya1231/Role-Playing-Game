@@ -19,7 +19,7 @@ public class BattleScene {
                 try {
                     //Чтобы бой не проходил за секунду, сделаем имитацию работы, как если бы
                     //у нас была анимация
-                    Thread.sleep(1000);
+                    Thread.sleep(2000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
