@@ -1,13 +1,13 @@
-import java.util.Random;
 
-public class FantasyCharacter {
-    private String name;
-    private int agility;
-    private int health;
-    private int experience;
-    private int gold;
-    private int power;
+public class FantasyCharacter implements Fighter {
+    private final String name;  // имя
+    private final int agility;  // ловкость
+    private int health;  // здоровье
+    private int experience;  //опыт
+    private int gold; // золото
+    private final int power;  // сила
 
+    // Конструктор
     public FantasyCharacter(String name, int agility, int health, int experience, int gold, int power) {
         this.name = name;
         this.agility = agility;
@@ -17,31 +17,41 @@ public class FantasyCharacter {
         this.power = power;
     }
 
+    @Override
+    public int attack() { // если наша ловкость, умноженная на 3, больше, чем случайное значение, то мы атакуем в размере нашей силы, если нет, то возвращаем 0
+        if (agility * 3 > getRandomValue()) return power;
+        else return 0;
+    }
+
+    public void decreaseGold(int price, int potion) { // покупка зелья
+        if (gold >= price) {
+            gold -= price;
+            health += potion;
+            System.out.println("Герой " + this.name + " потратил " + price + " золотых." +
+                    "Зелье приобретено и здоровье увеличилось на " + potion + " единиц." +
+                    " Остаток золота: " + gold + " золотых. " + " Показатель здоровья: " + (health + potion));
+        } else {
+            System.out.println("У героя " + this.name + " недостаточно средств для покупки зелья" +
+                    " за " + price + " золотых.");
+        }
+    }
+
+    // Геттеры и сеттеры
+
     public String getName() {
         return name;
     }
-    public int getAgility() {
-        return agility;
-    }
+
     public int getHealth() {
         return health;
     }
+
     public int getExperience() {
         return experience;
     }
+
     public int getGold() {
         return gold;
-    }
-    public int getPower() {
-        return power;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setAgility(int agility) {
-        this.agility = agility;
     }
 
     public void setHealth(int health) {
@@ -56,17 +66,14 @@ public class FantasyCharacter {
         this.gold = gold;
     }
 
-    public void setPower(int power) {
-        this.power = power;
+    //Переопределяем вывод в консоль, чтобы выводилось имя и очки здоровья
+    private int getRandomValue() {
+        return (int) (Math.random() * 100);
     }
-    public int attack() {
-        // Генерируем случайное значение для силы удара
-        Random random = new Random();
-        int minDamage = 5;
-        int maxDamage = 15;
-        return random.nextInt(maxDamage - minDamage + 1) + minDamage;
+
+    //Переопределяем вывод в консоль, чтобы выводилось имя и очки здоровья
+    @Override
+    public String toString() {
+        return String.format("%s здоровье:%d", name, health);
     }
-    // public int attack() {
-    //     return 0;
-    // }
 }

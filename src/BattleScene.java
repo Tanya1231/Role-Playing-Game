@@ -29,21 +29,20 @@ public class BattleScene {
         Thread thread = new Thread(runnable);
         thread.start();
     }
+
     //Метод для совершения удара
-    private Boolean makeHit(FantasyCharacter defender, FantasyCharacter attacker,
-                            Main.FightCallback fightCallback) {
+    private Boolean makeHit(FantasyCharacter defender, FantasyCharacter attacker, Main.FightCallback fightCallback) {
         //Получаем силу удара
         int hit = attacker.attack();
         //Отнимаем количество урона из здоровья защищающегося
         int defenderHealth = defender.getHealth() - hit;
         //Если атака прошла, выводим в консоль сообщение об этом
         if (hit != 0) {
-            System.out.println(String.format("%s Нанес удар в %d единиц!", attacker.getName(), hit));
-            System.out.println(String.format("У %s осталось %d единиц здоровья...", defender.getName(),
-                    defenderHealth));
+            System.out.printf("%s Нанес удар в %d единиц!%n", attacker.getName(), hit);
+            System.out.printf("У %s осталось %d единиц здоровья...%n", defender.getName(), defenderHealth);
         } else {
             //Если атакующий промахнулся (то есть урон не 0), выводим это сообщение
-            System.out.println(String.format("%s промахнулся!", attacker.getName()));
+            System.out.printf("%s промахнулся!%n", attacker.getName());
         }
         if (defenderHealth <= 0 && defender instanceof Hero) {
             //Если здоровье меньше 0 и если защищающейся был героем, то игра заканчивается
@@ -51,10 +50,9 @@ public class BattleScene {
             //Вызываем коллбэк, что мы проиграли
             fightCallback.fightLost();
             return true;
-        } else if(defenderHealth <= 0) {
+        } else if (defenderHealth <= 0) {
             //Если здоровья больше нет и защищающийся – это монстр, то мы забираем от монстра его опыт и золото
-            System.out.println(String.format("Враг повержен! Вы получаете %d опыт и %d золота",
-                    defender.getExperience(), defender.getGold()));
+            System.out.printf("Враг повержен! Вы получаете %d опыт и %d золота%n", defender.getExperience(), defender.getGold());
             attacker.setExperience(attacker.getExperience() + defender.getExperience());
             attacker.setGold(attacker.getGold() + defender.getGold());
             //вызываем коллбэк, что мы победили

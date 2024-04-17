@@ -1,35 +1,38 @@
 public class Trader implements Seller {
-    private int gold = 30; // Пример начальной суммы денег
-    private int price = 10;// Стоимость зелья
+    private String name;
+    private int gold;
+    private int price;
 
-    @Override
-    public String sell(Merchant.Goods goods) {
-        return null;
+    public Trader(String name, int gold, int price) {
+        this.name = name;
+        this.gold = gold;
+        this.price = price;
     }
-
     @Override
-    public String sell(Goods goods) {
+    public String trade(Player player) {
         String result = "";
-        if (goods == Goods.POTION) {
-            if (hasEnoughMoney(10)) {
-                updateMoney(10);
-
-                if (gold >= 10) {
-                    result = "Вы купили зелье за " + price + " золота. У вас осталось " + gold + " золота." +
-                            " Желаете продолжить покупки? (да/нет)";
-                } else {
-                    result = "Слишком мало денег. Хотите выйти? (да/нет)";
-                }
-            }
+        if (player != null && player.getGold() >= price) {
+            player.setGold(player.getGold() - price);
+            gold += price;
+            result = "Вы купили зелье за " + this.price + " золота. У вас осталось " + player.getGold() + " золота. " +
+                    " Теперь у вас Желаете продолжить покупки? (да/нет)";
+        } else {
+            result = "У вас недостаточно золота. Хотите выйти? (да/нет)";
         }
         return result;
     }
-    private boolean hasEnoughMoney(int price) {
-        return gold >= price;
+
+    public int getGold() {
+        return gold;
     }
 
-    public void updateMoney(int price) {
-        gold -= price;
+    public void setGold(int gold) {
+        this.gold = gold;
+    }
+
+    public void increaseGold(int price) {
+        gold += price;
+        System.out.println("Торговец получил " + price + " золота. Теперь у него " + gold + " золота.");
     }
 
     public enum Goods {

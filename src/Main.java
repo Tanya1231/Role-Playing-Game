@@ -10,8 +10,7 @@ public class Main {
     private static FantasyCharacter player = null;
     //Класс для битвы можно не создавать каждый раз, а переиспользовать
     private static BattleScene battleScene = null;
-    private static boolean isContinuingShopping;
-    private static final Trader trader = new Trader();
+
 
     public static void main(String[] args) {
         //Инициализируем Reader
@@ -34,69 +33,31 @@ public class Main {
         // именем будет служить первая введенная строка из консоли
         if (player == null) {
             player = new Hero(
-                    string, 100, 20, 20, 20, 0
+                    string, 100, 20, 20, 30, 10
             );
             System.out.println(String.format("Спасти наш мир от драконов вызвался %s! Ура-а-а! В бой!",
                     player.getName()));
+
             //Метод для вывода меню
             Navigation();
+            try {
+                command(br.readLine());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
         //Варианты для команд
         switch (string) {
             case "1": {
-                // Trader trader = new Trader();
-                // String result = trader.sell(Trader.Goods.POTION);
-                // System.out.println(result);
-                // // Обработка результата торговли, если нужно
-                // command(br.readLine());
-                // Thread traderThread = new Thread(() -> {
-                //     Trader trader = new Trader();
-                //     String result = trader.sell(Trader.Goods.POTION);
-                //     System.out.println(result);
-                // });
-                String result = trader.sell(Trader.Goods.POTION);
-                System.out.println(result);
-                //break;
+                commitSell();
+
             }
             break;
 
             case "2": {
-                // commitFight();
-                if (isContinuingShopping) {
-                    String result = trader.sell(Trader.Goods.POTION);
-                    System.out.println(result);
-                    String userInput = br.readLine();
-                    if (userInput.equalsIgnoreCase("да")) {
-                        command("2");
-                    } else {
-                        System.out.println("Слишком мало денег. Хотите выйти? (да/нет)");
-                        String exitInput = br.readLine();
-                        if (exitInput.equalsIgnoreCase("да")) {
-                            Navigation();
-                            command(br.readLine());
-                        } else {
-                            isContinuingShopping = false;
-                            commitFight();
-                        }
-                    }
-                }
-                // break;
+                commitFight();
             }
             break;
-
-            // case "да":
-            //     String result = trader.sell(Trader.Goods.POTION);
-            //     System.out.println(result);
-            //     if (result.contains("Желаете продолжить покупки?")) {
-            //         command("2");
-            //     } else {
-            //         isContinuingShopping = false;
-            //         commitFight();
-            //     }
-            //     break;
-            // }
-            // }
-            //  break;
 
             case "3":
                 System.exit(1);
@@ -108,9 +69,58 @@ public class Main {
                 Navigation();
                 command(br.readLine());
             }
+
+            //Снова ждем команды от пользователя
+            command(br.readLine());
         }
-        //Снова ждем команды от пользователя
-        command(br.readLine());
+    }
+
+    private static void commitSell() throws IOException {
+
+        if (player != null) {
+            Trader trader = new Trader("Торговец", 50, 10);
+
+            // Логика торговли с постепенным уменьшением золота у героя и увеличением здоровья
+            int price = 10; // Количество золота, которое требуется заплатить за товар
+            int potion_health = 50; // Количество единиц здоровья на которое увеличивается здоровье героя,
+// после покупки зелья
+            if (player.getGold() >= price) {
+                player.decreaseGold(price, potion_health);
+
+                System.out.println("Торговля прошла успешно! Желаете продолжить? да/нет");
+
+                String userResponse = br.readLine();
+                if (userResponse.equalsIgnoreCase("да")) {
+                    command("1");
+                } else if (userResponse.equalsIgnoreCase("нет")) {
+
+                } else {
+                    System.out.println("Некорректный ввод. Пожалуйста, введите 'да' или 'нет'.");
+                }
+
+                Navigation();
+            }
+            if (player.getGold() < price) {
+                player.decreaseGold(price, potion_health);
+
+                System.out.println("Торговля не состоялась." +
+                        "Желаете продолжить? да/нет");
+
+                String userResponse = br.readLine();
+                if (userResponse.equalsIgnoreCase("да")) {
+                    command("1");
+                } else if (userResponse.equalsIgnoreCase("нет")) {
+                    Navigation();
+                } else {
+                    System.out.println("Некорректный ввод. Пожалуйста, введите 'да' или 'нет'.");
+                }
+            }
+            try {
+                command(br.readLine());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     //после ввода имени, нам открывается меню, вот метод для меню:
@@ -124,10 +134,12 @@ public class Main {
     //То есть пользователю нужно ввести номер пункта,
     // который мы также обрабатываем в методе command, а именно в операторе switch:
     private static void commitFight() {
+
         battleScene.fight(player, createMonster(), new FightCallback() {
+
             @Override
             public void fightWin() {
-                System.out.println(String.format("%s победил! Теперь у вас %d опыта и %d золота, а также осталось %d едениц здоровья.",
+                System.out.println(String.format("%s победил! Теперь у вас %d опыта и %d золота, а также осталось %d здоровья.",
                         player.getName(), player.getExperience(), player.getGold(), player.getHealth()));
                 System.out.println("Желаете продолжить поход в темный лес или вернуться в город? (да/нет)");
                 try {
@@ -155,7 +167,7 @@ public class Main {
         //С вероятностью 50% создается или скелет, или гоблин
         if (random % 2 == 0) return new Goblin(
                 "Гоблин", 50, 10, 10, 100, 20);
-        else return new Skeleton(
+        else return new Skeleton (
                 "Скелет", 25, 20, 20, 100, 10);
     }
 
