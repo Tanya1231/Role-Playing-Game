@@ -36,6 +36,28 @@ public class FantasyCharacter implements Fighter {
         }
     }
 
+    // уровни
+    protected int next_lvl = 1;
+
+    public int LVL_UP(int experience) {
+        if (experience >= 15 && experience <= 20) {
+            return 2;
+        } else if (experience >= 21 && experience <= 40) {
+            return 3;
+        } else if (experience >= 41 && experience <= 60) {
+            return 4;
+        }
+        return 1;
+    }
+
+    void printIfLeveledUp() {
+        int new_lvl = LVL_UP(experience);
+        if (new_lvl > next_lvl) {
+            next_lvl = new_lvl;
+            System.out.println("Ваш уровень " + next_lvl);
+        }
+    }
+
     // Геттеры и сеттеры
 
     public String getName() {

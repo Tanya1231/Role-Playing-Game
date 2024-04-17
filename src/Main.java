@@ -81,11 +81,10 @@ public class Main {
 
             // Логика торговли с постепенным уменьшением золота у героя и увеличением здоровья
             int price = 10; // Количество золота, которое требуется заплатить за товар
-            int potion_health = 50; // Количество единиц здоровья на которое увеличивается здоровье героя,
+            int potion = 50; // Количество единиц здоровья на которое увеличивается здоровье героя,
 // после покупки зелья
             if (player.getGold() >= price) {
-                player.decreaseGold(price, potion_health);
-
+                player.decreaseGold(price, potion);
                 System.out.println("Торговля прошла успешно! Желаете продолжить? да/нет");
 
                 String userResponse = br.readLine();
@@ -99,7 +98,7 @@ public class Main {
                 Navigation();
             }
             if (player.getGold() < price) {
-                player.decreaseGold(price, potion_health);
+                player.decreaseGold(price, potion);
 
                 System.out.println("Торговля не состоялась." +
                         "Желаете продолжить? да/нет");
@@ -137,6 +136,7 @@ public class Main {
             public void fightWin() {
                 System.out.printf("%s победил! Теперь у вас %d опыта и %d золота, а также осталось %d здоровья.%n",
                         player.getName(), player.getExperience(), player.getGold(), player.getHealth());
+                player.printIfLeveledUp();
                 System.out.println("Желаете продолжить поход в темный лес или вернуться в город? (да/нет)");
                 try {
                     command(br.readLine());
