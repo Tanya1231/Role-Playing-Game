@@ -40,11 +40,11 @@ public class FantasyCharacter implements Fighter {
     protected int next_lvl = 1;
 
     public int LVL_UP(int experience) {
-        if (experience >= 15 && experience <= 20) {
+        if (experience >= 40 && experience <= 60) {
             return 2;
-        } else if (experience >= 21 && experience <= 40) {
+        } else if (experience >= 60 && experience <= 80) {
             return 3;
-        } else if (experience >= 41 && experience <= 60) {
+        } else if (experience >= 80 && experience <= 100) {
             return 4;
         }
         return 1;
